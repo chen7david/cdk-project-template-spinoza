@@ -10,7 +10,10 @@
     "build:infra": "mkdir -p infra/assets; cp -r app/layer.zip app/dist infra/assets",
     "clean:infra": "yarn --cwd infra clean",
     "test:app": "yarn --cwd app test",
-    "test:infra": "yarn --cwd infra test"
+    "test:infra": "yarn --cwd infra test",
+    "bundle": "yarn build:app && yarn build:infra",
+    "clean": "yarn clean:app && yarn clean:infra",
+    "deploy": "yarn clean && yarn bundle && cd infra && cdk synth --profile entix-sandbox && cdk deploy --profile entix-sandbox && cd .. && yarn clean"
   },
   "keywords": [],
   "author": "",
