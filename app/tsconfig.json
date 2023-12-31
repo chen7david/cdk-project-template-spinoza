@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES2020",
+    "noImplicitAny": true,
+    "preserveConstEnums": true,
+    "experimentalDecorators": true,
+    "outDir": "./dist",
+    "sourceMap": false,
+    "resolveJsonModule": true,
+    "types": ["node", "jest"],
+  },
+  "include": ["**/*.ts", "./package.json"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

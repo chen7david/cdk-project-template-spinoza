@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "install:app": "yarn --cwd app install",
     "build:app": "yarn --cwd app build",
     "clean:app": "yarn --cwd app clean"
   },
