@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "clean": "rm -rf assets"
+    "clean": "rm -rf assets cdk.out"
   },
   "devDependencies": {
     "@types/jest": "^29.5.1",

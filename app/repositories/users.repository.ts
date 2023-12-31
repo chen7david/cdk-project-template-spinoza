@@ -17,6 +17,9 @@ const generateUser = (): Tuser => ({
 })
 
 export const UserRepository = {
-    getAll: (amount: number = 100) => new Array(amount).map(() => generateUser()),
+    getAll: (amount: number = 100) => {
+        const items = new Array(amount).fill(null)
+        return items.map(() => generateUser())
+    },
     getOne: (id: number = 1) => generateUser()
 }
