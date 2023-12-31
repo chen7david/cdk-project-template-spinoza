@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "tsc": "tsc --skipLibCheck",
-    "build": "yarn clean && yarn bundle && yarn zip && yarn tsc",
+    "build": "yarn clean && yarn install && yarn bundle && yarn zip && yarn tsc --skipLibCheck",
     "bundle": "mkdir -p layer/nodejs && cp package.json layer/nodejs && yarn install --cwd layer/nodejs --frozen-lockfile --production",
     "zip": "cd layer; zip -r ../layer.zip *; cd ..",
     "clean": "rm -rf dist layer.zip layer"

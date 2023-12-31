@@ -1,6 +1,6 @@
 import { UserRepository } from '../../repositories/users.repository'
 
 export const handler = async () => {
-    const users = UserRepository.getAll()
+    const users = UserRepository.getAll(6)
     return { users }
 }

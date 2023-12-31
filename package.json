@@ -5,16 +5,18 @@
   "main": "index.js",
   "scripts": {
     "install:app": "yarn --cwd app install",
+    "install:infra": "yarn --cwd infra install",
     "build:app": "yarn --cwd app build",
     "clean:app": "yarn --cwd app clean",
-    "build:infra": "mkdir -p infra/assets; cp -r app/layer.zip app/dist infra/assets",
+    "build:infra": "mkdir -p infra/assets; cp -r app/layer.zip app/dist infra/assets && yarn install:infra",
     "clean:infra": "yarn --cwd infra clean",
     "test:app": "yarn --cwd app test",
     "test:infra": "yarn --cwd infra test",
     "bundle": "yarn build:app && yarn build:infra",
     "clean": "yarn clean:app && yarn clean:infra",
     "deploy:sandbox": "yarn clean && yarn bundle && cd infra && cdk synth --profile entix-sandbox && cdk deploy --profile entix-sandbox && cd .. && yarn clean",
-    "deploy": "yarn clean && yarn bundle && cd infra && npx cdk synth && npx cdk deploy"
+    "cdk:deploy": "yarn clean && yarn bundle && cd infra && npx cdk synth && npx cdk deploy",
+    "cdk:diff": "cd infra && npx cdk diff"
   },
   "keywords": [],
   "author": "",
