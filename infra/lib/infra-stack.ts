@@ -1,16 +1,27 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as cdk from 'aws-cdk-lib'
+import { Construct } from 'constructs'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const layer = new lambda.LayerVersion(this, 'node-modules-layer', {
+      layerVersionName: 'entix-node-modules-layer',
+      compatibleRuntimes: [
+        lambda.Runtime.NODEJS_18_X,
+      ],
+      code: lambda.Code.fromAsset('assets/layer.zip'),
+      description: 'lambda layer for external npm dependencies',
+    })
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'InfraQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    const userGetAllLambda = new lambda.Function(this, 'get-all-users', {
+      functionName: 'project-name-get-all-users',
+      runtime: lambda.Runtime.NODEJS_18_X,
+      code: new lambda.AssetCode('assets/dist'),
+      handler: 'handlers/users/get-all.handler',
+      layers: [layer]
+    })
+
   }
 }
