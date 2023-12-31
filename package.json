@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:app": "yarn --cwd app build",
+    "clean:app": "yarn --cwd app clean"
   },
   "keywords": [],
   "author": "",
