@@ -13,7 +13,8 @@
     "test:infra": "yarn --cwd infra test",
     "bundle": "yarn build:app && yarn build:infra",
     "clean": "yarn clean:app && yarn clean:infra",
-    "deploy": "yarn clean && yarn bundle && cd infra && cdk synth --profile entix-sandbox && cdk deploy --profile entix-sandbox && cd .. && yarn clean"
+    "deploy:sandbox": "yarn clean && yarn bundle && cd infra && cdk synth --profile entix-sandbox && cdk deploy --profile entix-sandbox && cd .. && yarn clean",
+    "deploy": "yarn clean && yarn bundle && cd infra && npx cdk synth && npx cdk deploy"
   },
   "keywords": [],
   "author": "",
