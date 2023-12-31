@@ -18,9 +18,10 @@ export class InfraStack extends cdk.Stack {
     const userGetAllLambda = new lambda.Function(this, 'get-all-users', {
       functionName: 'project-name-get-all-users',
       runtime: lambda.Runtime.NODEJS_18_X,
+      layers: [layer],
       code: new lambda.AssetCode('assets/dist'),
       handler: 'handlers/users/get-all.handler',
-      layers: [layer]
+      reservedConcurrentExecutions: 1
     })
 
   }
