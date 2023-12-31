@@ -1,0 +1,35 @@
+name: CD
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    name: Deploy CDK Typescript stack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initiated by user
+        run: echo $GITHUB_ACTOR
+
+      - name: Checkout code
+        uses: actions/checkout@v3.1.0
+
+      - name: Setup node.js
+        uses: actions/setup-node@v3.5.0
+      
+      - name: Install dependencies
+        run: yarn build
+      
+      - name: Build CDK stack
+        run: npm run build
+      
+      - name: Deploy AWS CDK stack
+        run: npx cdk deploy --ci --require-approval never --no-asset-metadata
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"
