@@ -10,6 +10,6 @@
     "resolveJsonModule": true,
     "types": ["node", "jest"],
   },
-  "include": ["**/*.ts", "./package.json"],
+  "include": ["**/*.ts", "./package.json", "jest.config.JS"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
