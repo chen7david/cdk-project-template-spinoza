@@ -6,6 +6,7 @@
   "scripts": {
     "install:app": "yarn --cwd app install",
     "install:infra": "yarn --cwd infra install",
+    "install": "yarn install:app && yarn install:infra",
     "build:app": "yarn --cwd app build",
     "clean:app": "yarn --cwd app clean",
     "build:infra": "mkdir -p infra/assets; cp -r app/layer.zip app/dist infra/assets && yarn install:infra",
