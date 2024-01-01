@@ -8,7 +8,7 @@ export const handler = async (event: APIGatewayEvent) => {
     const user_id = event.pathParameters?.user_id
     if(!group_id) return errorResponse(404, 'group_id is required')
     if(!user_id) return errorResponse(404, 'user_id is required')
-    const user = await UserRepository.getOne(tableName, {
+    const user = await UserRepository.deleteOne(tableName, {
         pk: group_id,
         sk: user_id
     })

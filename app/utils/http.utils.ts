@@ -1,27 +1,32 @@
 export type TCustomResponseHeaders = Record<string, string>
 
-export type TErrorOptoins = {
+export type TErrorResponseOptoins = {
     customResponseHeaders?: TCustomResponseHeaders,
     details?: any
 }
 
-export const createResponse = <T>(code: number = 200, body: T, customResponseHeaders?: TCustomResponseHeaders) => ({
-    statusCode: code,
+export type TSuccessResponseOptoins = {
+    customResponseHeaders?: TCustomResponseHeaders,
+    code?: number
+}
+
+export const response = <T>(body: T, ErrorResponseOptoins?: TSuccessResponseOptoins) => ({
+    statusCode: ErrorResponseOptoins?.code || 200,
     headers: {
         'Content-type': 'application/json',
-        ...(customResponseHeaders || {})
+        ...(ErrorResponseOptoins?.customResponseHeaders || {})
     },
     isBase64Encoded: true,
     body: JSON.stringify(body)
 })
 
-export const createErrorResponse = (code: number, message: string, ErrorOptoins?: TErrorOptoins) => ({
+export const errorResponse = (code: number, message: string, ErrorResponseOptoins?: TErrorResponseOptoins) => ({
     statusCode: code,
     headers: {
         'Content-type': 'application/json',
-        ...(ErrorOptoins?.customResponseHeaders || {})
+        ...(ErrorResponseOptoins?.customResponseHeaders || {})
     },
     isBase64Encoded: true,
     message: JSON.stringify(message),
-    ...({ details: ErrorOptoins?.details } || {})
+    ...({ details: ErrorResponseOptoins?.details } || {})
 })
