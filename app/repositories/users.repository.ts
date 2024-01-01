@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
 import { padStart, padEnd } from 'lodash'
-export type Tuser = {
+
+export type TUserEntity = {
     id: string
     username: string
     email: string
@@ -8,7 +9,7 @@ export type Tuser = {
     serial: string
 }
 
-const generateUser = (): Tuser => ({
+const generateUser = (): TUserEntity => ({
     id: randomUUID(),
     username: `username-${randomUUID()}`,
     email: `email-${randomUUID()}`,
@@ -21,5 +22,5 @@ export const UserRepository = {
         const items = new Array(amount).fill(null)
         return items.map(() => generateUser())
     },
-    getOne: (id: number = 1) => generateUser()
+    getOne: () => generateUser()
 }

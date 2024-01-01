@@ -20,11 +20,21 @@ export class InfraStack extends cdk.Stack {
 
     /* Lambda */
 
-    const userGetAllLambda = new lambda.Function(this, 'get-all-users', {
+    const userFindAllLambda = new lambda.Function(this, 'find-all-users', {
       functionName: 'project-name-get-all-users',
       runtime: lambda.Runtime.NODEJS_18_X,
       code: new lambda.AssetCode('assets/dist'),
       handler: 'handlers/users/get-all.handler',
+      reservedConcurrentExecutions: 1, // Maximum amount of lambdas allowed to run
+      layers: [layer]
+    })
+
+    const userFindOneLambda = new lambda.Function(this, 'find-all-users', {
+      functionName: 'project-name-get-all-users',
+      runtime: lambda.Runtime.NODEJS_18_X,
+      code: new lambda.AssetCode('assets/dist'),
+      handler: 'handlers/users/get-one.handler',
+      reservedConcurrentExecutions: 1,
       layers: [layer]
     })
 
@@ -39,5 +49,33 @@ export class InfraStack extends cdk.Stack {
       }
     })
 
+    /* Setup ApiGateway Routes */
+
+    const rootApiRouteV1 = api.root.addResource('v1')
+    const usersRouteV1 = rootApiRouteV1.addResource('users')
+    const userIdRouteV1 = usersRouteV1.addResource('{user_id}')
+
+    /* Setup Route RequestValidators */
+
+    const bodyAndParamValidator = new apigateway.RequestValidator(this, 'ApiBodyAndParamValidator', {
+      restApi: api,
+      requestValidatorName: 'api-body-and-param-validator',
+      validateRequestBody: true,
+      validateRequestParameters: true
+    })
+
+    /* Create lambda ApiGateway integrations */
+    const userFindOneResolver = new apigateway.LambdaIntegration(userFindOneLambda)
+    const userFindAllResolver = new apigateway.LambdaIntegration(userFindAllLambda)
+
+    usersRouteV1.addMethod('GET', userFindAllResolver, {
+      operationName: 'GET all users',
+      requestValidator: bodyAndParamValidator
+    })
+
+    userIdRouteV1.addMethod('GET', userFindOneResolver, {
+      operationName: 'GET one user',
+      requestValidator: bodyAndParamValidator
+    })
   }
 }
