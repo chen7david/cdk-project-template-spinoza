@@ -25,7 +25,6 @@ export class InfraStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: new lambda.AssetCode('assets/dist'),
       handler: 'handlers/users/get-all.handler',
-      reservedConcurrentExecutions: 1, // Maximum amount of lambdas allowed to run
       layers: [layer]
     })
 
@@ -34,7 +33,6 @@ export class InfraStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_18_X,
       code: new lambda.AssetCode('assets/dist'),
       handler: 'handlers/users/get-one.handler',
-      reservedConcurrentExecutions: 1,
       layers: [layer]
     })
 
