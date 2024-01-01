@@ -1,26 +1,9 @@
-import { randomUUID } from 'crypto'
-import { padStart, padEnd } from 'lodash'
-
-export type TUserEntity = {
-    id: string
-    username: string
-    email: string
-    password: string
-    serial: string
-}
-
-const generateUser = (): TUserEntity => ({
-    id: randomUUID(),
-    username: `username-${randomUUID()}`,
-    email: `email-${randomUUID()}`,
-    password: `${padStart(randomUUID(), 10, '*')}`,
-    serial: `${padStart(padEnd(), 10, '*')}`
-})
+import { TDBCompositeKey, createItem, deleteItem, getItem, putItem, scanItem } from "../utils/dynamodb-client.utils"
 
 export const UserRepository = {
-    getAll: (amount: number = 100) => {
-        const items = new Array(amount).fill(null)
-        return items.map(() => generateUser())
-    },
-    getOne: () => generateUser()
+    getAll: async (tableName: string) => scanItem(tableName),
+    putOne: async <T extends object>(tableName: string, item: T) => putItem(tableName, item),
+    getOne: (tableName: string, compositeKey: TDBCompositeKey) => getItem(tableName, compositeKey),
+    createOne: async <T extends object>(tableName: string, item: T) => createItem(tableName, item),
+    deleteOne: async (tableName: string, compositeKey: TDBCompositeKey) =>  deleteItem(tableName, compositeKey),
 }
