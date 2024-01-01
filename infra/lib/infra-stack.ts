@@ -75,5 +75,30 @@ export class InfraStack extends cdk.Stack {
       operationName: 'GET one user',
       requestValidator: bodyAndParamValidator
     })
+
+    const usagePlan = api.addUsagePlan('UsagePlan', {
+      name: 'spinoza-usage-plan',
+      description: 'Enables rate and burst limiting for the api',
+      apiStages: [{
+        api: api,
+        stage: api.deploymentStage
+      }],
+      quota: {
+        limit: 1000,
+        period: apigateway.Period.DAY
+      },
+      throttle: {
+        rateLimit: 50,
+        burstLimit: 2,
+      },
+
+    })
+
+    const spinozaApikey = api.addApiKey('spinoza-api-key', {
+      apiKeyName: 'spinoza',
+      description: 'Apikey to required to access api'
+    })
+
+    usagePlan.addApiKey(spinozaApikey)
   }
 }
