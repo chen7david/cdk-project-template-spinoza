@@ -20,7 +20,7 @@ export class InfraStack extends cdk.Stack {
 
     /* Lambda */
 
-    const userFindAllLambda = new lambda.Function(this, 'find-all-users', {
+    const userGetAllLambda = new lambda.Function(this, 'get-all-users', {
       functionName: 'project-name-get-all-users',
       runtime: lambda.Runtime.NODEJS_18_X,
       code: new lambda.AssetCode('assets/dist'),
@@ -29,8 +29,8 @@ export class InfraStack extends cdk.Stack {
       layers: [layer]
     })
 
-    const userFindOneLambda = new lambda.Function(this, 'find-all-users', {
-      functionName: 'project-name-get-all-users',
+    const userGetOneLambda = new lambda.Function(this, 'get-one-users', {
+      functionName: 'project-name-get-one-users',
       runtime: lambda.Runtime.NODEJS_18_X,
       code: new lambda.AssetCode('assets/dist'),
       handler: 'handlers/users/get-one.handler',
@@ -65,15 +65,15 @@ export class InfraStack extends cdk.Stack {
     })
 
     /* Create lambda ApiGateway integrations */
-    const userFindOneResolver = new apigateway.LambdaIntegration(userFindOneLambda)
-    const userFindAllResolver = new apigateway.LambdaIntegration(userFindAllLambda)
+    const userGetOneResolver = new apigateway.LambdaIntegration(userGetOneLambda)
+    const userGetAllResolver = new apigateway.LambdaIntegration(userGetAllLambda)
 
-    usersRouteV1.addMethod('GET', userFindAllResolver, {
+    usersRouteV1.addMethod('GET', userGetAllResolver, {
       operationName: 'GET all users',
       requestValidator: bodyAndParamValidator
     })
 
-    userIdRouteV1.addMethod('GET', userFindOneResolver, {
+    userIdRouteV1.addMethod('GET', userGetOneResolver, {
       operationName: 'GET one user',
       requestValidator: bodyAndParamValidator
     })
