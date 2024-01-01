@@ -18,6 +18,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.130",
     "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.10.6",
