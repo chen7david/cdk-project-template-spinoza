@@ -68,11 +68,13 @@ export class InfraStack extends cdk.Stack {
 
     usersRouteV1.addMethod('GET', userGetAllResolver, {
       operationName: 'GET all users',
+      apiKeyRequired: true,
       requestValidator: bodyAndParamValidator
     })
 
     userIdRouteV1.addMethod('GET', userGetOneResolver, {
       operationName: 'GET one user',
+      apiKeyRequired: true,
       requestValidator: bodyAndParamValidator
     })
 
