@@ -3,3 +3,4 @@ layer
 node_modules
 dist
 cdk.out
+.DS_Store
