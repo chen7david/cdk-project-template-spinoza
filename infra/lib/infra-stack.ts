@@ -27,6 +27,18 @@ export class InfraStack extends cdk.Stack {
       }
     })
 
+    const userPoolClient = userPool.addClient('app-client', 
+     {
+        oAuth: {
+          flows : {
+            implicitCodeGrant: true
+          },
+          scopes: [cognito.OAuthScope.OPENID],
+          callbackUrls: ['https://www.google.com']
+        }
+      }
+    )
+
     /* Dynamodb table */
 
     const table = new dynamodb.Table(this, 'spinoza-proj-table', {
@@ -155,7 +167,7 @@ export class InfraStack extends cdk.Stack {
       restApi: api,
       requestValidatorName: 'api-body-and-param-validator',
       validateRequestBody: true,
-      validateRequestParameters: true
+      validateRequestParameters: true,
     })
 
     /* Create lambda ApiGateway integrations */
@@ -168,19 +180,31 @@ export class InfraStack extends cdk.Stack {
     const method = usersRouteV1.addMethod('GET', userGetAllResolver, {
       operationName: 'GET all users',
       apiKeyRequired: true,
-      requestValidator: bodyAndParamValidator
+      requestValidator: bodyAndParamValidator,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizer: {
+        authorizerId: cognitoAutherizer.ref
+      }
     })
 
     userIdRouteV1.addMethod('GET', userGetOneResolver, {
       operationName: 'GET one user',
       apiKeyRequired: true,
-      requestValidator: bodyAndParamValidator
+      requestValidator: bodyAndParamValidator,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizer: {
+        authorizerId: cognitoAutherizer.ref
+      }
     })
 
     userIdRouteV1.addMethod('POST', userCreateOneResolver, {
       operationName: 'POST one user',
       apiKeyRequired: true,
-      requestValidator: bodyAndParamValidator
+      requestValidator: bodyAndParamValidator,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizer: {
+        authorizerId: cognitoAutherizer.ref
+      }
     })
 
     userIdRouteV1.addMethod('PUT', userPutOneResolver, {
@@ -192,31 +216,35 @@ export class InfraStack extends cdk.Stack {
     userIdRouteV1.addMethod('DELETE', userDeleteOneResolver, {
       operationName: 'PUT one user',
       apiKeyRequired: true,
-      requestValidator: bodyAndParamValidator
+      requestValidator: bodyAndParamValidator,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizer: {
+        authorizerId: cognitoAutherizer.ref
+      }
     })
 
-    const usagePlan = api.addUsagePlan('UsagePlan', {
-      name: 'spinoza-usage-plan',
-      description: 'Enables rate and burst limiting for the api',
-      apiStages: [{
-        api: api,
-        stage: api.deploymentStage
-      }],
-      quota: {
-        limit: 1000,
-        period: apigateway.Period.DAY
-      },
-      throttle: {
-        rateLimit: 50,
-        burstLimit: 2,
-      },
-    })
+    // const usagePlan = api.addUsagePlan('UsagePlan', {
+    //   name: 'spinoza-usage-plan',
+    //   description: 'Enables rate and burst limiting for the api',
+    //   apiStages: [{
+    //     api: api,
+    //     stage: api.deploymentStage
+    //   }],
+    //   quota: {
+    //     limit: 1000,
+    //     period: apigateway.Period.DAY
+    //   },
+    //   throttle: {
+    //     rateLimit: 50,
+    //     burstLimit: 2,
+    //   },
+    // })
 
-    const spinozaApikey = api.addApiKey('spinoza-api-key', {
-      apiKeyName: 'spinoza-api-key',
-      description: 'Apikey to required to access api'
-    })
+    // const spinozaApikey = api.addApiKey('spinoza-api-key', {
+    //   apiKeyName: 'spinoza-api-key',
+    //   description: 'Apikey to required to access api'
+    // })
 
-    usagePlan.addApiKey(spinozaApikey)
+    // usagePlan.addApiKey(spinozaApikey)
   }
 }
