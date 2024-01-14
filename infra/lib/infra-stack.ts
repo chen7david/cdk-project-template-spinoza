@@ -177,7 +177,7 @@ export class InfraStack extends cdk.Stack {
     const userPutOneResolver = new apigateway.LambdaIntegration(userPutOneLambda)
     const userDeleteOneResolver = new apigateway.LambdaIntegration(userDeleteOneLambda)
 
-    const method = usersRouteV1.addMethod('GET', userGetAllResolver, {
+    usersRouteV1.addMethod('GET', userGetAllResolver, {
       operationName: 'GET all users',
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
@@ -217,29 +217,5 @@ export class InfraStack extends cdk.Stack {
         authorizerId: cognitoAutherizer.ref
       }
     })
-
-    // const usagePlan = api.addUsagePlan('UsagePlan', {
-    //   name: 'spinoza-usage-plan',
-    //   description: 'Enables rate and burst limiting for the api',
-    //   apiStages: [{
-    //     api: api,
-    //     stage: api.deploymentStage
-    //   }],
-    //   quota: {
-    //     limit: 1000,
-    //     period: apigateway.Period.DAY
-    //   },
-    //   throttle: {
-    //     rateLimit: 50,
-    //     burstLimit: 2,
-    //   },
-    // })
-
-    // const spinozaApikey = api.addApiKey('spinoza-api-key', {
-    //   apiKeyName: 'spinoza-api-key',
-    //   description: 'Apikey to required to access api'
-    // })
-
-    // usagePlan.addApiKey(spinozaApikey)
   }
 }
