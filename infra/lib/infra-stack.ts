@@ -179,7 +179,6 @@ export class InfraStack extends cdk.Stack {
 
     const method = usersRouteV1.addMethod('GET', userGetAllResolver, {
       operationName: 'GET all users',
-      apiKeyRequired: true,
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
       authorizer: {
@@ -189,7 +188,6 @@ export class InfraStack extends cdk.Stack {
 
     userIdRouteV1.addMethod('GET', userGetOneResolver, {
       operationName: 'GET one user',
-      apiKeyRequired: true,
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
       authorizer: {
@@ -199,7 +197,6 @@ export class InfraStack extends cdk.Stack {
 
     userIdRouteV1.addMethod('POST', userCreateOneResolver, {
       operationName: 'POST one user',
-      apiKeyRequired: true,
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
       authorizer: {
@@ -209,13 +206,11 @@ export class InfraStack extends cdk.Stack {
 
     userIdRouteV1.addMethod('PUT', userPutOneResolver, {
       operationName: 'PUT one user',
-      apiKeyRequired: true,
       requestValidator: bodyAndParamValidator
     })
 
     userIdRouteV1.addMethod('DELETE', userDeleteOneResolver, {
       operationName: 'PUT one user',
-      apiKeyRequired: true,
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
       authorizer: {
