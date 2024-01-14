@@ -31,12 +31,13 @@ export class InfraStack extends cdk.Stack {
      {
         oAuth: {
           flows : {
-            implicitCodeGrant: true
+            authorizationCodeGrant: true,
           },
           scopes: [cognito.OAuthScope.OPENID],
-          callbackUrls: ['https://www.google.com']
-        }
-      }
+          callbackUrls: ['https://oauth.pstmn.io/v1/browser-callback']
+        },
+        generateSecret: true
+      },
     )
 
     /* Dynamodb table */
