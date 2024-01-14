@@ -3,10 +3,29 @@ import { Construct } from 'constructs'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as apigateway from 'aws-cdk-lib/aws-apigateway'
+import * as cognito from 'aws-cdk-lib/aws-cognito'
 
 export class InfraStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    /* Cognito */
+    const userPool = new cognito.UserPool(this, 'cdk-spinoza-user-pool', {
+      selfSignUpEnabled: true,
+      accountRecovery: cognito.AccountRecovery.PHONE_AND_EMAIL,
+      userVerification: {
+        emailStyle: cognito.VerificationEmailStyle.CODE
+      },
+      autoVerify: {
+        email: true
+      },
+      standardAttributes: {
+        email: {
+          required: true,
+          mutable: true
+        }
+      }
+    })
 
     /* Dynamodb table */
 
@@ -114,6 +133,14 @@ export class InfraStack extends cdk.Stack {
       }
     })
 
+    const cognitoAutherizer = new apigateway.CfnAuthorizer(this, 'spinoza-autherizer', {
+      restApiId: api.restApiId,
+      name: 'CognitoAuthorizer',
+      type: 'COGNITO_USER_POOLS',
+      identitySource: 'method.request.header.Authorization',
+      providerArns: [userPool.userPoolArn],
+    })
+
     /* Setup ApiGateway Routes */
 
     const rootApiRouteV1 = api.root.addResource('v1')
@@ -138,7 +165,7 @@ export class InfraStack extends cdk.Stack {
     const userPutOneResolver = new apigateway.LambdaIntegration(userPutOneLambda)
     const userDeleteOneResolver = new apigateway.LambdaIntegration(userDeleteOneLambda)
 
-    usersRouteV1.addMethod('GET', userGetAllResolver, {
+    const method = usersRouteV1.addMethod('GET', userGetAllResolver, {
       operationName: 'GET all users',
       apiKeyRequired: true,
       requestValidator: bodyAndParamValidator
