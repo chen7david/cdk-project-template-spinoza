@@ -180,6 +180,7 @@ export class InfraStack extends cdk.Stack {
 
     usersRouteV1.addMethod('GET', userGetAllResolver, {
       operationName: 'GET all users',
+      authorizationScopes: ['users:read'],
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
       authorizer: {
@@ -191,8 +192,9 @@ export class InfraStack extends cdk.Stack {
       operationName: 'GET one user',
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizationScopes: ['user:read'],
       authorizer: {
-        authorizerId: cognitoAutherizer.ref
+        authorizerId: cognitoAutherizer.ref,
       }
     })
 
@@ -200,6 +202,7 @@ export class InfraStack extends cdk.Stack {
       operationName: 'POST one user',
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizationScopes: ['user:create'],
       authorizer: {
         authorizerId: cognitoAutherizer.ref
       }
@@ -207,13 +210,19 @@ export class InfraStack extends cdk.Stack {
 
     userIdRouteV1.addMethod('PUT', userPutOneResolver, {
       operationName: 'PUT one user',
-      requestValidator: bodyAndParamValidator
+      requestValidator: bodyAndParamValidator,
+      authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizationScopes: ['user:update'],
+      authorizer: {
+        authorizerId: cognitoAutherizer.ref
+      }
     })
 
     userIdRouteV1.addMethod('DELETE', userDeleteOneResolver, {
       operationName: 'PUT one user',
       requestValidator: bodyAndParamValidator,
       authorizationType: apigateway.AuthorizationType.COGNITO,
+      authorizationScopes: ['users:deleete'],
       authorizer: {
         authorizerId: cognitoAutherizer.ref
       }
